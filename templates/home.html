@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+    <style>
+        .weather-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            height: calc(100vh - 70px);
+            margin-top: 70px;
+            padding: 20px;
+        }
+
+        .weather-panel {
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .city-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+        }
+
+        .city-item {
+            padding: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .city-item:hover {
+            background: #f0f2f5;
+        }
+
+        .weather-details {
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        .weather-info {
+            margin-bottom: 15px;
+        }
+
+        .weather-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .weather-table td {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        #3d-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    
+    <!-- <div class="weather-container">
+        <div class="weather-panel">
+            <h2>Current Weather</h2>
+            <ul class="city-list">
+                <li class="city-item" data-city="Kolkata">Kolkata</li>
+                <li class="city-item" data-city="Mumbai">Mumbai</li>
+                <li class="city-item" data-city="Chennai">Chennai</li>
+                <li class="city-item" data-city="New Delhi">New Delhi</li>
+            </ul>
+
+            <div class="weather-details">
+                <div class="weather-info">
+                    <h3 id="current-city">New Delhi</h3>
+                    <div id="temperature">17°C</div>
+                    <div>Feels like <span id="feels-like">17°C</span></div>
+                    <div><span id="humidity">84</span>% Humidity</div>
+                    <div>Wind: <span id="wind-speed">0 km/h</span> Calm</div>
+                    <div>Observation time: <span id="obs-time">2023-08-08 23:30 IST</span></div>
+                </div>
+
+                <table class="weather-table">
+                    <tr>
+                        <td>Sunrise</td>
+                        <td id="sunrise">06:39 (IST)</td>
+                    </tr>
+                    <tr>
+                        <td>Sunset</td>
+                        <td id="sunset">18:25 (IST)</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="dashboard-container">
+
+            <div class="control-panel">
+                <div class="header">
+                    <h1>Sanrachna Prahari</h1>
+                    <div class="current-date">{{ current_date }}</div>
+                </div>
+    
+                <div class="sensor-selector">
+                    <label>Select Sensors:</label>
+                    <select id="sensor-select" multiple>
+                        {% for i in range(1, 18) %}
+                        <option value="sensor_{{ i }}">Sensor {{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+    
+                <div class="status-board">
+                    <h3>System Status</h3>
+                    <div class="status-item">
+                        <span class="led active"></span>
+                        <span>Data Collection: Active</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="led"></span>
+                        <span>Connection: Stable</span>
+                    </div>
+                </div>
+            </div>
+    
+            
+            <div class="visualization-area">
+                <canvas id="sensorChart"></canvas>
+                <div class="chart-controls">
+                    <button onclick="toggleAnimation()" id="animationBtn">⏸ Pause</button>
+                    <input type="range" id="speedControl" min="1" max="10" value="5" oninput="updateSpeed(this.value)">
+                </div>
+            </div>
+        </div>
+
+    
+    </div> -->
+
+    <div class="main-container">
+        <!-- Weather Section on the Left -->
+        <div class="weather-container">
+            <div class="weather-panel">
+                <h2>Current Weather</h2>
+                <ul class="city-list">
+                    <li class="city-item" data-city="Kolkata">Kolkata</li>
+                    <li class="city-item" data-city="Mumbai">Mumbai</li>
+                    <li class="city-item" data-city="Chennai">Chennai</li>
+                    <li class="city-item" data-city="New Delhi">New Delhi</li>
+                </ul>
+    
+                <div class="weather-details">
+                    <div class="weather-info">
+                        <h3 id="current-city">New Delhi</h3>
+                        <div id="temperature">17°C</div>
+                        <div>Feels like <span id="feels-like">17°C</span></div>
+                        <div><span id="humidity">84</span>% Humidity</div>
+                        <div>Wind: <span id="wind-speed">0 km/h</span> Calm</div>
+                        <div>Observation time: <span id="obs-time">2023-08-08 23:30 IST</span></div>
+                    </div>
+    
+                    <table class="weather-table">
+                        <tr>
+                            <td>Sunrise</td>
+                            <td id="sunrise">06:39 (IST)</td>
+                        </tr>
+                        <tr>
+                            <td>Sunset</td>
+                            <td id="sunset">18:25 (IST)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    
+        <!-- Sensor Data Visualization Panel on the Right -->
+        <div class="sensor-panel">
+            <div class="sensor-header">
+                <h2>Sensor Data Visualization</h2>
+                <select id="sensorSelect"></select>
+                <button id="playPauseBtn">Pause</button>
+            </div>
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+    
+
+    <script>
+        const API_KEY = 'f17d7c2252e8a149f1bc928fa31195cb'; // Replace with your API key
+        
+        async function fetchWeather(city) {
+            try {
+                const response = await fetch(
+                    `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`
+                );
+                const data = await response.json();
+                
+                // Update DOM elements
+                document.getElementById('current-city').textContent = city;
+                document.getElementById('temperature').textContent = `${Math.round(data.main.temp)}°C`;
+                document.getElementById('feels-like').textContent = `${Math.round(data.main.feels_like)}°C`;
+                document.getElementById('humidity').textContent = data.main.humidity;
+                document.getElementById('wind-speed').textContent = `${(data.wind.speed * 3.6).toFixed(1)} km/h`;
+                
+                // Convert timestamps
+                const obsDate = new Date(data.dt * 1000);
+                document.getElementById('obs-time').textContent = 
+                    obsDate.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+                
+                const sunrise = new Date(data.sys.sunrise * 1000);
+                document.getElementById('sunrise').textContent = 
+                    sunrise.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit' });
+                
+                const sunset = new Date(data.sys.sunset * 1000);
+                document.getElementById('sunset').textContent = 
+                    sunset.toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit' });
+                
+            } catch (error) {
+                console.error('Error fetching weather:', error);
+                alert('Failed to fetch weather data');
+            }
+        }
+
+        // Event listeners for city selection
+        document.querySelectorAll('.city-item').forEach(item => {
+            item.addEventListener('click', () => {
+                fetchWeather(item.dataset.city);
+            });
+        });
+
+        // Load default city weather
+        fetchWeather('New Delhi');
+    </script>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+    <script src="{{ url_for('static', filename='js/sensor-dashboard.js') }}"></script>
+    <!-- <script type="module" src="{{ url_for('static', filename='js/structure-viewer.js') }}"></script> -->
+</body>
+</html>

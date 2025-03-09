@@ -1,0 +1,97 @@
+.dashboard-container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 2rem;
+    height: calc(100vh - 70px);
+    margin-top: 70px;
+    padding: 20px;
+    background: #0f172a;
+}
+
+.control-panel {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.header h1 {
+    color: #7c3aed;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.current-date {
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+.sensor-selector {
+    margin: 20px 0;
+}
+
+.choices__list--multiple .choices__item {
+    background: #7c3aed;
+    border: 1px solid #6d28d9;
+}
+
+.status-board {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 15px;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    color: #94a3b8;
+}
+
+.led {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 10px;
+    background: #475569;
+}
+
+.led.active {
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+}
+
+#sensorChart {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    backdrop-filter: blur(5px);
+}
+
+
+.chart-controls {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    display: flex;
+    gap: 10px;
+    background: rgba(0,0,0,0.3);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+#animationBtn {
+    background: #7c3aed;
+    border: none;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+#speedControl {
+    width: 100px;
+    accent-color: #7c3aed;
+}
